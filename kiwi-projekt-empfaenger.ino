@@ -174,6 +174,7 @@ void matrixString(char* s, int shift_speed) {
 // X - Animation auf Matrix anzeigen
 void fehlerAnim() {
   matrixAnim(fehlerIMG, 12, 100);
+  m.writeSprite(8, 0, leer);
   matrixScroll(8, 200);
 }
 
