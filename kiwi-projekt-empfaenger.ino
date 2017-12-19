@@ -125,7 +125,7 @@ int rvalue = 0;
 
 // Matrix-Daten initialisieren
 int data = 8;    // DIN pin of MAX7219 module
-int load = 9;    // CS pin of MAX7219 module
+int load = 9;    //  CS pin of MAX7219 module
 int clock = 10;  // CLK pin of MAX7219 module
 MaxMatrix m(data, load, clock, 1);
 
@@ -176,6 +176,7 @@ void fehlerAnim() {
   matrixAnim(fehlerIMG, 12, 100);
   m.writeSprite(8, 0, leer);
   matrixScroll(8, 200);
+  m.writeSprite(0, 0, leer);
 }
 
 // Die Zahlenliste auf der Matrix ausgeben
@@ -187,7 +188,9 @@ void matrixNumArr(int *arr) {
       matrixLetter(numbers[arr[i]], 100);
     }
   }
+  m.writeSprite(8, 0, leer);
   matrixScroll(7, 100);
+  m.writeSprite(0, 0, leer);
 }
 
 // Zahlenliste löschen
