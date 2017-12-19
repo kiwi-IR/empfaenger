@@ -122,6 +122,11 @@ bool gestartet = false;
 int toshow[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 // "Reparierter" Zahlenwert
 int rvalue = 0;
+// Zeit des letzten Empfangs
+// (Um zu überprüfen ob es sich um einen wirklichen Übertragungsfehler handelt)
+int lasttime;
+// Zeit zwische Zahlenwerten ab der ein Fehler gewertet wird
+const int maxtime = 100;
 
 // Matrix-Daten initialisieren
 int data = 8;    // DIN pin of MAX7219 module
@@ -218,6 +223,8 @@ void setup() {
   // Matrixausgabe
   matrixAnim(startIMG, 7, 100);
   matrixScroll(8, 100);
+
+  lasttime = millis();
 }
 
 void loop() {
@@ -250,17 +257,22 @@ void loop() {
       Serial.print(" Typ: ");
       Serial.print(results.decode_type);
       Serial.println("");
-      if (!gestartet) {
-        Serial.println("Fehler: Nicht gestartet");
-        fehlerAnim();
-        lZahlen(&currpos, &gestartet, &toshow);
-      } else if (currpos > 9 || rvalue > 10) {
-        Serial.println("Fehler: Zu viele Zahlen oder kaputter Wert");
-        fehlerAnim();
-        lZahlen(&currpos, &gestartet, &toshow);
+      if (millis() - lasttime < maxtime) {
+        if (!gestartet) {
+          Serial.println("Fehler: Nicht gestartet");
+          fehlerAnim();
+          lZahlen(&currpos, &gestartet, &toshow);
+        } else if (currpos > 9 || rvalue > 10) {
+          Serial.println("Fehler: Zu viele Zahlen oder kaputter Wert");
+          fehlerAnim();
+          lZahlen(&currpos, &gestartet, &toshow);
+        } else {
+          toshow[currpos] = rvalue;
+          currpos++;
+        }
       } else {
-        toshow[currpos] = rvalue;
-        currpos++;
+        Serial.println("Fehler: Zu langer Zeitabstand zwischen übertragenen Zahlen");
+        lZahlen(&currpos, &gestartet, &toshow);
       }
     }
     irrecv.resume();
