@@ -50,7 +50,7 @@ int clock = 10;  // CLK pin of MAX7219 module
 MaxMatrix m(data, load, clock, 1);
 
 // Infrarot Emfänger Daten initialisieren
-IRrecv irrecv(11);
+IRrecv irrecv(12);
 decode_results results;
 
 /* FUNKTIONEN */
@@ -130,7 +130,6 @@ void setup() {
 
   // Matrix initialisieren
   m.init();
-  m.setIntensity(0);
 
   // Empfänger initialisieren
   irrecv.enableIRIn();
